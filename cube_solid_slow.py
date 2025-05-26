@@ -62,6 +62,7 @@ while cv2.waitKey(1) != ord('q'):
     cos_b = np.cos(B)
     sin_b = np.sin(B)
 
+    show_points = {}
     for k, cube in cube_dict.items():
         x_shift, y_shift, z_shift = [int(c) for c in k.split("_")]
         cube_x = cube[0]
@@ -81,9 +82,23 @@ while cv2.waitKey(1) != ord('q'):
         cube_y_proj = ((k1_pixel*y_rotate2)/(k2_pixel+z_rotate1)).astype(np.int16) + y_displacement
 
         y_proj_plot = screen_height - 1 - cube_y_proj
-        screen[y_proj_plot, cube_x_proj, :] = [(x_shift+2) * 80, (y_shift+2) * 80, (z_shift+2) * 80]
 
-    cv2.imshow("window", screen) # need to implement depth filtering. and illumination ofcourse
+        for i in range(len(cube_x_proj)):
+            val = show_points.get((cube_x_proj[i], y_proj_plot[i]))
+            if val is not None:
+                if z_rotate1[i] < val[0]: # saving only the ones which are infront, i.e. whose z value is minimum
+                    show_points[(cube_x_proj[i], y_proj_plot[i])] = (z_rotate1[i], ((x_shift+2) * 80, (y_shift+2) * 80, (z_shift+2) * 80))
+            else:
+                show_points[(cube_x_proj[i], y_proj_plot[i])] = (z_rotate1[i], ((x_shift+2) * 80, (y_shift+2) * 80, (z_shift+2) * 80))
+
+    x, y = zip(*show_points.keys())
+    _, rgb = zip(*show_points.values())
+    r, g, b = zip(*rgb)
+
+    screen[y, x, 0] = np.array(r)
+    screen[y, x, 1] = np.array(g)
+    screen[y, x, 2] = np.array(b)
+    cv2.imshow("window", screen) # need to implement depth filtering (DONE!, very inefficiently though). and illumination ofcourse
 
     A+=0.04
     B+=0.02
