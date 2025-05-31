@@ -51,8 +51,7 @@ def render_cube(int screen_height,
     cdef cnp.ndarray[cnp.float32_t, ndim=1] center_cube_y = np.repeat(y_points[np.newaxis, :], len(points)-2, axis=0).flatten()
     cdef cnp.ndarray[cnp.float32_t, ndim=1] center_cube_z = np.repeat(points[1:-1], len(x_points)) # repeat Repeats each element of an array after themselves
 
-    cdef cnp.ndarray[cnp.float32_t, ndim=2] xx
-    cdef cnp.ndarray[cnp.float32_t, ndim=2] yy
+    cdef cnp.ndarray[cnp.float32_t, ndim=2] xx, yy
     xx, yy = np.meshgrid(points, points) # for rest of the 2 faces
     cdef cnp.ndarray[cnp.float32_t, ndim=1] x_points_face = (xx.flatten()).astype(np.float32)
     cdef cnp.ndarray[cnp.float32_t, ndim=1] y_points_face = (yy.flatten()).astype(np.float32)
@@ -83,25 +82,12 @@ def render_cube(int screen_height,
             center_cube_z + z_shift_pixel,
         )
 
-    cdef cnp.float32_t cos_a
-    cdef cnp.float32_t sin_a
-    cdef cnp.float32_t cos_b
-    cdef cnp.float32_t sin_b
+    cdef cnp.float32_t cos_a, sin_a, cos_b, sin_b
     cdef Dict[Tuple[np.float32, np.float32], Tuple[np.float32, Tuple[int, int, int]]] show_points
-    cdef cnp.ndarray[cnp.float32_t, ndim=1] cube_x
-    cdef cnp.ndarray[cnp.float32_t, ndim=1] cube_y
-    cdef cnp.ndarray[cnp.float32_t, ndim=1] cube_z
-    cdef cnp.ndarray[cnp.float32_t, ndim=1] x_rotate1
-    cdef cnp.ndarray[cnp.float32_t, ndim=1] y_rotate1
-    cdef cnp.ndarray[cnp.float32_t, ndim=1] z_rotate1
-    cdef cnp.ndarray[cnp.float32_t, ndim=1] x_rotate2
-    cdef cnp.ndarray[cnp.float32_t, ndim=1] y_rotate2
-    cdef cnp.ndarray[cnp.int32_t, ndim=1] cube_x_proj
-    cdef cnp.ndarray[cnp.int32_t, ndim=1] cube_y_proj
-    cdef cnp.ndarray[cnp.int32_t, ndim=1] y_proj_plot
-    cdef Tuple[cnp.int32_t, ...] x 
-    cdef Tuple[cnp.int32_t, ...] y
-    cdef Tuple[cnp.int32_t, ...] z 
+    cdef cnp.ndarray[cnp.float32_t, ndim=1] cube_x, cube_y, cube_z
+    cdef cnp.ndarray[cnp.float32_t, ndim=1] x_rotate1, y_rotate1, z_rotate1, x_rotate2, y_rotate2
+    cdef cnp.ndarray[cnp.int32_t, ndim=1] cube_x_proj, cube_y_proj, y_proj_plot
+    cdef Tuple[cnp.int32_t, ...] x, y, z
     cdef Tuple[Tuple[int, int, int], ...] rgb
     cdef Tuple[int, ...] r, g, b
 
